@@ -19,8 +19,6 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
       }
     ).then((data) => data.json());
 
-    console.log(userData);
-
     await client
       .database("EduNetwork")
       .container("users")
