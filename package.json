@@ -22,6 +22,7 @@
     "express-session": "^1.18.2",
     "firebase-admin": "^13.4.0",
     "googleapis": "^155.0.0",
+    "ipapi.co": "^0.3.0",
     "isomorphic-git": "^1.30.2",
     "module-alias": "^2.2.3",
     "node-cron": "^4.2.0",

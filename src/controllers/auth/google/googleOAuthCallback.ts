@@ -20,7 +20,11 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
         },
       }
     ).then((data) => data.json());
-    
+
+    console.log(tokens)
+
+    const ip = getClientIp(req);
+
     await client
       .database("EduNetwork")
       .container("users")
@@ -29,12 +33,15 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
         name: userData.name,
         image: userData.picture ? userData.picture : "",
         email: userData.email,
-        provider: "google"
+        provider: "google",
       });
 
-    const ip = getClientIp(req);
-    
-    res.status(200).redirect(config.frontend_url);
+    console.log(ip);
+
+
+    res
+      .status(200)
+      .redirect(config.frontend_url + "/login?token=" + tokens.access_token);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error occured" });
