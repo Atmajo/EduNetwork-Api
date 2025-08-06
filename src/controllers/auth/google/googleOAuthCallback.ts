@@ -30,7 +30,13 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
         email: userData.email,
         tokens,
       });
-
+    
+    res.cookie("tokens", tokens.refresh_token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "none",
+      expires: new Date(tokens.expiry_date!),
+    });
     res.status(200).redirect(config.frontend_url);
   } catch (error) {
     console.log(error);
