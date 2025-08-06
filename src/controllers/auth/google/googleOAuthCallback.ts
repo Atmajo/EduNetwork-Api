@@ -1,5 +1,6 @@
+import { config } from "@/config/config";
 import { client } from "@/lib/azure";
-import { authorizationUrl, getToken } from "@/lib/googleOAuth";
+import { getToken } from "@/lib/googleOAuth";
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
@@ -30,7 +31,7 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
         tokens,
       });
 
-    res.status(200).json({ state });
+    res.status(200).redirect(config.frontend_url);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error occured" });

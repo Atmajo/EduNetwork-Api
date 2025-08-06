@@ -14,4 +14,7 @@ export const config = {
   meta_client_id: process.env.META_CLIENT_ID,
   meta_client_secret: process.env.META_CLIENT_SECRET,
   meta_redirect_url: process.env.META_REDIRECT_URL,
+  frontend_url: process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL
+    : "http://localhost:5173",
 };
