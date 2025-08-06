@@ -3,15 +3,12 @@ import { verifyToken } from "../middlewares/token";
 import logger from "@/logger/logger";
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
-import { getClientIp } from "request-ip"
 import { googleOAuth } from "@/controllers/auth/google/googleOAuth";
 import { googleOAuthCallback } from "@/controllers/auth/google/googleOAuthCallback";
 
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
-  const ip = getClientIp(req)
-  logger.info(ip);
   res.send("Express + TypeScript Server is running");
 });
 

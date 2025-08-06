@@ -2,6 +2,7 @@ import { config } from "@/config/config";
 import { client } from "@/lib/azure";
 import { getToken } from "@/lib/googleOAuth";
 import { Request, Response } from "express";
+import { getClientIp } from "request-ip";
 import { v4 as uuidv4 } from "uuid";
 
 export const googleOAuthCallback = async (req: Request, res: Response) => {
@@ -19,7 +20,7 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
         },
       }
     ).then((data) => data.json());
-
+    
     await client
       .database("EduNetwork")
       .container("users")
@@ -28,15 +29,11 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
         name: userData.name,
         image: userData.picture ? userData.picture : "",
         email: userData.email,
-        tokens,
+        provider: "google"
       });
+
+    const ip = getClientIp(req);
     
-    res.cookie("tokens", tokens.refresh_token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "none",
-      expires: new Date(tokens.expiry_date!),
-    });
     res.status(200).redirect(config.frontend_url);
   } catch (error) {
     console.log(error);
