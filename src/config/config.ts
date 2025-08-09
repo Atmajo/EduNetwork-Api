@@ -2,7 +2,9 @@ import { config as dotenvConfig } from "dotenv";
 dotenvConfig();
 
 export const config = {
+  nodeenv: process.env.NODE_ENV || "development",
   port: process.env.PORT ? process.env.PORT : 3000,
+  session_secret: process.env.SESSION_SECRET || "your-session-secret",
   jwtsecret: process.env.JWT_SECRET!,
   url: process.env.URL ? process.env.URL : "http://localhost:3000",
   dburl: process.env.DATABASE_URL,

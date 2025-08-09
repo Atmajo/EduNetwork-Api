@@ -5,6 +5,8 @@ import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { googleOAuth } from "@/controllers/auth/google/googleOAuth";
 import { googleOAuthCallback } from "@/controllers/auth/google/googleOAuthCallback";
+import { profile } from "@/controllers/profile/profile";
+import { geolocation } from "@/controllers/auth/mfa/geolocation";
 
 const router = Router();
 
@@ -36,5 +38,7 @@ router.get("/logs", (req: Request, res: Response) => {
 
 router.get("/auth/googleOAuth", googleOAuth)
 router.get("/auth/googleOAuth/callback", googleOAuthCallback)
+router.get("/geolocation", geolocation)
+router.get("/profile", profile)
 
 export { router as indexRouter };
