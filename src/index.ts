@@ -1,12 +1,19 @@
 import "./config/module-alias";
 
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import { indexRouter } from "@/routers";
 import { config } from "@/config/config";
 import logger from "@/logger/logger";
 import schedulePing from "@/lib/cron";
 import cors from "cors";
-import session from "express-session";
+const session = require("express-session");
+import { RedisStore } from "connect-redis";
+import { redis } from "./lib/redis";
+
+const redisStore = new RedisStore({
+  client: redis,
+  prefix: "edunetworkSession:",
+});
 
 const app: Express = express();
 const port = config.port;
@@ -18,18 +25,31 @@ app.use(
     origin: config.frontend_url,
   })
 );
-app.use(session({
-  secret: config.session_secret,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
-}));
+app.use(
+  session({
+    name: "ambassador.sid",
+    store: redisStore,
+    secret: config.session_secret,
+    resave: false,
+    saveUninitialized: false,
+
+    cookie: {
+      // domain: "<your-domain>",
+      path: "/",
+      httpOnly: true,
+      secure: config.nodeenv === "dev" ? true : false,
+      sameSite: config.nodeenv === "dev" ? "none" : "lax",
+      priority: "high",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    },
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
 
 app.listen(port, async () => {
-  config.nodeenv === "production" && await schedulePing.start();
+  config.nodeenv === "production" && (await schedulePing.start());
   logger.info(`Server is running at http://localhost:${port}`);
 });

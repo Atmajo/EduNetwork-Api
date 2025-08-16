@@ -1,8 +1,6 @@
-import { config } from "@/config/config";
 import { getToken } from "@/lib/googleOAuth";
+import { redis } from "@/lib/redis";
 import { Request, Response } from "express";
-import { getClientIp } from "request-ip";
-import { v4 as uuidv4 } from "uuid";
 
 declare module "express-session" {
   interface SessionData {
@@ -19,7 +17,7 @@ export const googleOAuthCallback = async (req: Request, res: Response) => {
 
   try {
     const tokens = await getToken(code as string);
-    
+
     req.session.tokens = tokens;
 
     res.redirect("/profile");
